@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Liquid Volume Mixer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  margin: 0;
+  padding: 10px;
+  background: #111;
+  color: #fff;
+  font-family: system-ui, sans-serif;
+}
+
+.app {
+  max-width: 360px;
+  margin: auto;
+}
+
+h1 {
+  font-size: 17px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+input {
+  padding: 6px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: none;
+  text-align: center;
+}
+
+.part-name {
+  flex: 1.2;
+}
+
+.ratio {
+  width: 48px;
+}
+
+button {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: none;
+  background: #444;
+  color: #fff;
+}
+
+.remove {
+  width: 28px;
+  background: #333;
+}
+
+.result {
+  background: #1c1c1c;
+  padding: 8px;
+  margin-top: 10px;
+  font-size: 14px;
+  border-radius: 6px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+  <h1>Liquid Volume Mixer</h1>
+
+  <div id="parts"></div>
+
+  <button onclick="addPart()">+ Add part</button>
+
+  <br><br>
+
+  <input id="finalVolume" type="number" placeholder="Final volume (ml)" value="1000">
+
+  <br><br>
+
+  <button onclick="calculate()">Calculate</button>
+
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+let partIndex = 0;
+
+function addPart() {
+  partIndex++;
+  const div = document.createElement("div");
+  div.className = "row";
+  div.innerHTML = `
+    <input class="part-name" value="Part ${String.fromCharCode(64 + partIndex)}">
+    <input class="ratio" type="number" value="1">
+    <button class="remove" onclick="this.parentElement.remove()">×</button>
+  `;
+  document.getElementById("parts").appendChild(div);
+}
+
+addPart();
+addPart();
+
+function calculate() {
+  const rows = document.querySelectorAll(".row");
+  const finalVolume = Number(document.getElementById("finalVolume").value);
+
+  let ratios = [];
+  let names = [];
+
+  rows.forEach(r => {
+    const ratio = Number(r.children[1].value);
+    if (ratio > 0) {
+      ratios.push(ratio);
+      names.push(r.children[0].value || "Part");
+    }
+  });
+
+  const totalRatio = ratios.reduce((a,b) => a + b, 0);
+
+  let volumes = [];
+  let used = 0;
+
+  ratios.forEach((r, i) => {
+    let v = Math.round(finalVolume * r / totalRatio);
+    volumes.push(v);
+    used += v;
+  });
+
+  // Fix rounding drift
+  const drift = used - finalVolume;
+  volumes[volumes.length - 1] -= drift;
+
+  let out = "";
+  volumes.forEach((v, i) => {
+    out += `<div>${names[i]}: ${v} ml</div>`;
+  });
+
+  out += `<hr><strong>Total:</strong> ${finalVolume} ml`;
+
+  document.getElementById("result").innerHTML = out;
+}
+</script>
+
+</body>
+</html>

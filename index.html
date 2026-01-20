@@ -7,29 +7,28 @@
 
 <style>
 body {
-  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 10px;
   background: #111;
   color: #fff;
-  margin: 0;
-  padding: 12px;
+  font-family: system-ui, sans-serif;
+}
+
+.app {
+  max-width: 360px;
+  margin: auto;
 }
 
 h1 {
-  font-size: 18px;
+  font-size: 17px;
   text-align: center;
   margin-bottom: 10px;
 }
 
-.container {
-  max-width: 420px;
-  margin: auto;
-}
-
-.part {
-  display: grid;
-  grid-template-columns: 1fr 70px 28px;
+.row {
+  display: flex;
   gap: 6px;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 input {
@@ -37,17 +36,19 @@ input {
   font-size: 14px;
   border-radius: 4px;
   border: none;
+  text-align: center;
 }
 
-.remove {
-  background: #333;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  font-size: 14px;
+.part-name {
+  flex: 1.2;
+}
+
+.ratio {
+  width: 48px;
 }
 
 button {
+  width: 100%;
   padding: 8px;
   font-size: 14px;
   border-radius: 6px;
@@ -56,9 +57,9 @@ button {
   color: #fff;
 }
 
-.full {
-  width: 100%;
-  margin-top: 8px;
+.remove {
+  width: 28px;
+  background: #333;
 }
 
 .result {
@@ -73,36 +74,34 @@ button {
 
 <body>
 
-<div class="container">
+<div class="app">
   <h1>Liquid Volume Mixer</h1>
 
   <div id="parts"></div>
 
-  <button class="full" onclick="addPart()">+ Add part</button>
+  <button onclick="addPart()">+ Add part</button>
 
-  <input
-    id="finalVolume"
-    class="full"
-    type="number"
-    placeholder="Final volume (ml)"
-    value="1000"
-  >
+  <br><br>
 
-  <button class="full" onclick="calculate()">Calculate</button>
+  <input id="finalVolume" type="number" placeholder="Final volume (ml)" value="1000">
+
+  <br><br>
+
+  <button onclick="calculate()">Calculate</button>
 
   <div class="result" id="result"></div>
 </div>
 
 <script>
-let partCount = 0;
+let partIndex = 0;
 
-function addPart(name = "") {
-  partCount++;
+function addPart() {
+  partIndex++;
   const div = document.createElement("div");
-  div.className = "part";
+  div.className = "row";
   div.innerHTML = `
-    <input placeholder="Part ${String.fromCharCode(64 + partCount)}" value="Part ${String.fromCharCode(64 + partCount)}">
-    <input type="number" placeholder="Ratio" value="1">
+    <input class="part-name" value="Part ${String.fromCharCode(64 + partIndex)}">
+    <input class="ratio" type="number" value="1">
     <button class="remove" onclick="this.parentElement.remove()">×</button>
   `;
   document.getElementById("parts").appendChild(div);
@@ -112,30 +111,43 @@ addPart();
 addPart();
 
 function calculate() {
-  const parts = document.querySelectorAll(".part");
-  let totalRatio = 0;
-
-  parts.forEach(p => {
-    const r = Number(p.children[1].value);
-    if (r > 0) totalRatio += r;
-  });
-
+  const rows = document.querySelectorAll(".row");
   const finalVolume = Number(document.getElementById("finalVolume").value);
-  let output = "";
-  let sum = 0;
 
-  parts.forEach(p => {
-    const name = p.children[0].value || "Part";
-    const r = Number(p.children[1].value);
-    if (r > 0) {
-      const v = Math.round(finalVolume * r / totalRatio);
-      sum += v;
-      output += `<div>${name}: ${v} ml</div>`;
+  let ratios = [];
+  let names = [];
+
+  rows.forEach(r => {
+    const ratio = Number(r.children[1].value);
+    if (ratio > 0) {
+      ratios.push(ratio);
+      names.push(r.children[0].value || "Part");
     }
   });
 
-  output += `<hr><div><strong>Total:</strong> ${sum} ml</div>`;
-  document.getElementById("result").innerHTML = output;
+  const totalRatio = ratios.reduce((a,b) => a + b, 0);
+
+  let volumes = [];
+  let used = 0;
+
+  ratios.forEach((r, i) => {
+    let v = Math.round(finalVolume * r / totalRatio);
+    volumes.push(v);
+    used += v;
+  });
+
+  // Fix rounding drift
+  const drift = used - finalVolume;
+  volumes[volumes.length - 1] -= drift;
+
+  let out = "";
+  volumes.forEach((v, i) => {
+    out += `<div>${names[i]}: ${v} ml</div>`;
+  });
+
+  out += `<hr><strong>Total:</strong> ${finalVolume} ml`;
+
+  document.getElementById("result").innerHTML = out;
 }
 </script>
 

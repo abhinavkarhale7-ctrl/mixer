@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Liquid Volume Mixer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+    .part {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    input {
+      flex: 1;
+      padding: 8px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 10px;
+      width: 100%;
+    }
+    .result {
+      margin-top: 20px;
+      background: #222;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Liquid Volume Mixer</h1>
+
+<div id="parts">
+  <div class="part">
+    <input placeholder="Part name (A)" value="Part A">
+    <input type="number" placeholder="Ratio" value="1">
+  </div>
+  <div class="part">
+    <input placeholder="Part name (B)" value="Part B">
+    <input type="number" placeholder="Ratio" value="9">
+  </div>
+</div>
+
+<button onclick="addPart()">Add another part</button>
+
+<br><br>
+
+<input id="finalVolume" type="number" placeholder="Final volume (ml)" value="1000">
+
+<button onclick="calculate()">Calculate</button>
+
+<div class="result" id="result"></div>
+
+<script>
+function addPart() {
+  const div = document.createElement("div");
+  div.className = "part";
+  div.innerHTML = `
+    <input placeholder="Part name">
+    <input type="number" placeholder="Ratio">
+  `;
+  document.getElementById("parts").appendChild(div);
+}
+
+function calculate() {
+  const parts = document.querySelectorAll(".part");
+  let totalRatio = 0;
+
+  parts.forEach(p => {
+    const ratio = Number(p.children[1].value);
+    if (ratio > 0) totalRatio += ratio;
+  });
+
+  const finalVolume = Number(document.getElementById("finalVolume").value);
+  let output = "";
+
+  parts.forEach(p => {
+    const name = p.children[0].value || "Part";
+    const ratio = Number(p.children[1].value);
+    if (ratio > 0) {
+      const volume = (finalVolume * ratio / totalRatio).toFixed(2);
+      output += `<div>${name}: ${volume} ml</div>`;
+    }
+  });
+
+  document.getElementById("result").innerHTML = output;
+}
+</script>
+
+</body>
+</html>

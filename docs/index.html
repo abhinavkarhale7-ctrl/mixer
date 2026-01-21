@@ -7,102 +7,127 @@
 <style>
   :root{
     --bg:#0f1112;
-    --panel:#141619;
+    --card:#17181a;
     --muted:#9aa0a6;
     --accent:#3fa7ff;
-    --card:#17181a;
     --btn:#232529;
-    --focus:rgba(63,167,255,0.25);
-    --danger:#ff6b6b;
+    --focus:rgba(63,167,255,0.18);
+    --round:12px;
   }
-  html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;color:#eef2f5;background:linear-gradient(180deg,#070708 0%, #0d0f11 100%);-webkit-font-smoothing:antialiased;}
-  .app{max-width:820px;margin:26px auto;padding:22px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.02);}
-  header{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
-  h1{font-size:28px;margin:0;font-weight:800;letter-spacing:0.2px}
-  p.lead{margin:0;color:var(--muted);font-size:13px}
-  .controls{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
-  input[type="number"], input[type="text"], select{
-    padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:#0b0b0c;color:inherit;font-size:14px;min-width:120px;
-    box-shadow: inset 0 -1px 0 rgba(255,255,255,0.01);
+
+  /* Base */
+  html,body { height:100%; margin:0; font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; color:#eef2f5; background:linear-gradient(180deg,#070708 0%, #0d0f11 100%); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+  .app { max-width:820px; margin:18px auto; padding:18px; border-radius:16px; background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.008)); box-shadow:0 10px 40px rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.02); }
+
+  /* Header */
+  header { display:flex; gap:12px; align-items:center; margin-bottom:12px; padding-bottom:6px; border-bottom:1px solid rgba(255,255,255,0.02); }
+  h1 { font-size:30px; margin:0; font-weight:900; letter-spacing:0.2px; color:#fff; }
+  p.lead { margin:0; color:var(--muted); font-size:13px; }
+
+  /* Controls */
+  .controls { display:flex; gap:10px; align-items:center; margin-top:12px; }
+  .field { display:flex; flex-direction:column; gap:6px; }
+  label.small { font-size:12px; color:var(--muted); }
+
+  input[type="number"], input[type="text"], select {
+    padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.03);
+    background:#0b0b0c; color:inherit; font-size:15px;
+    min-width:120px;
   }
-  button{background:var(--btn);color:#fff;border:none;padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:600;transition:all .14s ease}
-  button:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,0,0,0.45)}
-  button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);font-weight:600}
-  .parts{margin-top:8px;display:flex;flex-direction:column;gap:10px}
-  .part{display:flex;gap:10px;align-items:center;padding:10px;background:var(--card);border-radius:10px;border:1px solid rgba(255,255,255,0.02)}
-  .part .name{flex:1;min-width:160px;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.02);background:transparent;color:inherit}
-  .part .ratio{width:120px;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.02);background:transparent;color:inherit;text-align:center}
-  .part .meta{display:flex;gap:8px;align-items:center}
-  .small{font-size:13px;color:var(--muted)}
-  .result{margin-top:16px;padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));border:1px solid rgba(255,255,255,0.02)}
-  .result-list{display:grid;gap:8px}
-  .row-btn{background:transparent;border:1px solid rgba(255,255,255,0.03);padding:8px;border-radius:8px;color:var(--muted);width:40px;height:40px;display:inline-grid;place-content:center}
-  .summary{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:8px}
-  .badge{background:linear-gradient(90deg,var(--accent), #2fa0ff);padding:8px 10px;border-radius:10px;font-size:13px;color:#02101a}
-  .danger{background:linear-gradient(90deg,var(--danger),#ff857f)}
-  .flex{display:flex;gap:8px}
-  footer{margin-top:12px;color:var(--muted);font-size:13px;display:flex;gap:10px;align-items:center}
-  input:focus, select:focus, button:focus, .part .name:focus, .part .ratio:focus{outline:2px solid var(--focus);outline-offset:2px}
-  @media (max-width:640px){ .controls{flex-direction:column;align-items:stretch} .part{flex-direction:column;align-items:stretch} .part .meta{justify-content:flex-end} }
+
+  /* Parts list */
+  .parts { margin-top:14px; display:flex; flex-direction:column; gap:10px; }
+  .part {
+    display:flex; gap:10px; align-items:center; padding:10px;
+    background:var(--card); border-radius:var(--round); border:1px solid rgba(255,255,255,0.02);
+  }
+  .part .name { flex:1; padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.02); background:transparent; color:inherit; font-size:15px; }
+  .part .ratio { width:120px; padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.02); background:transparent; text-align:center; font-size:15px; }
+
+  .meta { display:flex; gap:8px; align-items:center; }
+  .row-btn {
+    background:transparent; border:1px solid rgba(255,255,255,0.03); color:var(--muted);
+    width:44px; height:44px; display:inline-grid; place-content:center; border-radius:10px; font-weight:700;
+  }
+  .row-btn:active { transform: translateY(1px); }
+
+  /* Result */
+  .result { margin-top:16px; padding:12px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border:1px solid rgba(255,255,255,0.02); }
+  .result-list { display:flex; flex-direction:column; gap:8px; }
+  .result-row { display:flex; justify-content:space-between; align-items:center; }
+  .small { font-size:13px; color:var(--muted); }
+
+  /* Footer actions */
+  .actions { display:flex; gap:10px; margin-top:12px; align-items:center; }
+  .btn-primary { background:linear-gradient(90deg,var(--accent), #2fa0ff); color:#02101a; border:none; padding:10px 14px; border-radius:12px; font-weight:700; cursor:pointer; min-width:120px; box-shadow:0 6px 18px rgba(47,160,255,0.12); }
+  .btn-ghost { background:transparent; border:1px solid rgba(255,255,255,0.03); color:var(--muted); padding:10px 12px; border-radius:12px; font-weight:700; cursor:pointer; }
+
+  /* Responsive / mobile-first */
+  @media (max-width:640px) {
+    .controls { flex-direction:column; align-items:stretch; }
+    .controls > * { width:100%; }
+    .part { flex-direction:column; align-items:stretch; gap:8px; }
+    .part .ratio { width:100%; }
+    .meta { justify-content:flex-end; }
+    .actions { flex-direction:column; align-items:stretch; }
+    .btn-primary, .btn-ghost { width:100%; }
+    h1 { font-size:32px; text-align:center; }
+    header { flex-direction:column; align-items:center; gap:6px; }
+  }
+
+  /* Focus */
+  input:focus, select:focus, button:focus { outline:2px solid var(--focus); outline-offset:2px; }
 </style>
 </head>
 <body>
   <main class="app" role="main" aria-labelledby="title">
     <header>
-      <div>
+      <div style="flex:1">
         <h1 id="title">Liquid Volume Mixer</h1>
-        <p class="lead">Split a target volume between named parts using ratios. Totals always match the final volume.</p>
+        <p class="lead">Distribute a target volume among parts using ratios. Totals always match exactly.</p>
       </div>
     </header>
 
-    <section aria-label="Controls" class="controls">
-      <div style="display:flex;gap:8px;align-items:center">
+    <section class="controls" aria-label="Controls">
+      <div class="field" style="flex:1">
         <label class="small" for="finalVolume">Final volume</label>
-        <input id="finalVolume" type="number" inputmode="decimal" min="0" value="1000" aria-describedby="unit" />
-        <select id="unit" aria-label="Unit">
-          <option value="ml">ml</option>
-          <option value="l">L</option>
-        </select>
+        <div style="display:flex;gap:8px">
+          <input id="finalVolume" type="number" inputmode="decimal" min="0" value="1000" />
+          <select id="unit" aria-label="Unit">
+            <option value="ml">ml</option>
+            <option value="l">L</option>
+          </select>
+        </div>
       </div>
 
-      <div style="margin-left:auto;display:flex;gap:8px">
-        <button id="addPartBtn" onclick="addPart()" title="Add part">+ Add part</button>
-        <button id="clearBtn" class="ghost" title="Clear all parts" onclick="clearParts()">Clear</button>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button id="addPartBtn" class="btn-primary" onclick="addPart()" title="Add part">+ Add part</button>
+        <button id="clearBtn" class="btn-ghost" onclick="clearParts()">Clear</button>
       </div>
     </section>
 
-    <section aria-label="Parts" class="parts" id="parts"></section>
-
-    <div class="summary" aria-hidden="false">
-      <div class="badge small">Total ratio: <span id="totalRatio">0</span></div>
-      <div class="small">Preview (first part): <span id="previewPercent">—</span></div>
-      <div style="margin-left:auto" class="presets">
-        <button class="ghost" onclick="savePreset()">Save preset</button>
-        <select id="presetList" onchange="loadPresetFromSelect(this.value)">
-          <option value="">Load preset…</option>
-        </select>
-      </div>
-    </div>
+    <section class="parts" id="parts" aria-label="Parts"></section>
 
     <div class="result" id="result" aria-live="polite">
-      <div class="small">No calculation yet — add parts and enter a final volume.</div>
+      <div class="small">Add parts and tap Calculate.</div>
     </div>
 
-    <footer>
-      <button onclick="calculate()">Calculate</button>
-      <button onclick="copyResult()" class="ghost">Copy</button>
-      <div style="margin-left:auto" class="small">Tip: use the up/down arrows next to each part to reorder. Rounding uses the Largest Remainder method to ensure totals match exactly.</div>
-    </footer>
+    <div class="actions">
+      <button class="btn-primary" onclick="calculate()">Calculate</button>
+      <button class="btn-ghost" onclick="copyResult()">Copy result</button>
+      <div style="margin-left:auto" class="small">Total ratio: <strong id="totalRatio">0</strong></div>
+    </div>
   </main>
 
 <script>
-/* Mixer app (trimmed): no precision control, no CSV export, improved UI
- - integer allocation uses Largest Remainder method (operates in ml)
- - local presets in localStorage
+/* Mobile-friendly simplified mixer
+ - Same color scheme, simplified layout and controls
+ - Largest remainder integer allocation (ml) to guarantee totals
+ - Touch-friendly controls and full-width actions on small screens
+ - Local persistence of parts (auto-save)
 */
 
-const PART_STORAGE_KEY = 'mixer:state:v1';
-const PRESETS_KEY = 'mixer:presets:v1';
+const STORAGE_KEY = 'mixer:state:v1';
 let partIndex = 0;
 
 function saveState(){
@@ -115,11 +140,11 @@ function saveState(){
     unit: document.getElementById('unit').value,
     parts
   };
-  localStorage.setItem(PART_STORAGE_KEY, JSON.stringify(state));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
 function loadState(){
-  const raw = localStorage.getItem(PART_STORAGE_KEY);
+  const raw = localStorage.getItem(STORAGE_KEY);
   if(!raw) return false;
   try{
     const s = JSON.parse(raw);
@@ -128,57 +153,9 @@ function loadState(){
     clearParts(false);
     (s.parts || []).forEach(p => addPart(p.name || undefined, p.ratio || 1));
     return true;
-  }catch(e){ console.warn('Could not load state', e); return false; }
+  }catch(e){ return false; }
 }
 
-function savePreset(){
-  const name = prompt('Preset name:');
-  if(!name) return;
-  const raw = localStorage.getItem(PRESETS_KEY);
-  const presets = raw ? JSON.parse(raw) : {};
-  const parts = [...document.querySelectorAll('.part')].map(p => ({
-    name: p.querySelector('.name').value.trim(),
-    ratio: Number(p.querySelector('.ratio').value) || 0
-  }));
-  const preset = {
-    finalVolume: Number(document.getElementById('finalVolume').value) || 0,
-    unit: document.getElementById('unit').value,
-    parts
-  };
-  presets[name] = preset;
-  localStorage.setItem(PRESETS_KEY, JSON.stringify(presets));
-  populatePresetList();
-  alert('Preset saved: ' + name);
-}
-
-function populatePresetList(){
-  const sel = document.getElementById('presetList');
-  const raw = localStorage.getItem(PRESETS_KEY);
-  sel.innerHTML = '<option value="">Load preset…</option>';
-  if(!raw) return;
-  const presets = JSON.parse(raw);
-  Object.keys(presets).forEach(k => {
-    const opt = document.createElement('option'); opt.value = k; opt.textContent = k;
-    sel.appendChild(opt);
-  });
-}
-
-function loadPresetFromSelect(name){
-  if(!name) return;
-  const raw = localStorage.getItem(PRESETS_KEY);
-  if(!raw) return;
-  const presets = JSON.parse(raw);
-  const preset = presets[name];
-  if(!preset) return;
-  document.getElementById('finalVolume').value = preset.finalVolume || 0;
-  document.getElementById('unit').value = preset.unit || 'ml';
-  clearParts(false);
-  (preset.parts || []).forEach(p => addPart(p.name || undefined, p.ratio || 1));
-  calculate();
-  setTimeout(()=>document.getElementById('presetList').value = '', 300);
-}
-
-/* utils */
 function defaultPartName(i){
   const A = 65;
   if(i < 26) return 'Part ' + String.fromCharCode(A + i);
@@ -193,8 +170,8 @@ function addPart(name, ratio){
   const part = document.createElement('div');
   part.className = 'part';
   part.innerHTML = `
-    <input class="name" aria-label="Part name" type="text" value="${(name ?? defaultPartName(i)).replace(/"/g,'&quot;')}">
-    <input class="ratio" aria-label="Ratio" type="number" min="0" step="any" value="${(ratio ?? 1)}">
+    <input class="name" type="text" value="${(name ?? defaultPartName(i)).replace(/"/g,'&quot;')}" aria-label="Part name">
+    <input class="ratio" type="number" min="0" step="any" value="${(ratio ?? 1)}" aria-label="Ratio">
     <div class="meta">
       <button class="row-btn" title="Move up" aria-label="Move up">▲</button>
       <button class="row-btn" title="Move down" aria-label="Move down">▼</button>
@@ -239,7 +216,6 @@ function onChange(){
   saveState();
 }
 
-/* Calculation: largest remainder method (integer allocation in ml) */
 function calculate(){
   const parts = [...document.querySelectorAll('.part')];
   const finalVolumeRaw = Number(document.getElementById('finalVolume').value) || 0;
@@ -257,10 +233,8 @@ function calculate(){
     return;
   }
 
-  // operate in ml for integer fairness
   let finalVolumeMl = finalVolumeRaw;
   if(unit === 'l') finalVolumeMl = finalVolumeRaw * 1000;
-
   if(finalVolumeMl <= 0){
     renderMessage('Final volume must be > 0.');
     return;
@@ -269,7 +243,7 @@ function calculate(){
   const totalRatio = items.reduce((s,i)=>s+i.ratio,0);
   const exactVolumes = items.map(i => (finalVolumeMl * i.ratio / totalRatio));
 
-  // largest remainder integer allocation (ml)
+  // Largest remainder integer allocation (ml)
   const floored = exactVolumes.map(v => Math.floor(v));
   let sumFloor = floored.reduce((a,b)=>a+b,0);
   let remainder = Math.round(finalVolumeMl - sumFloor);
@@ -284,8 +258,7 @@ function calculate(){
     if(k === fractions.length && remainder > 0) k = 0;
   }
 
-  // display volumes in selected unit
-  const displayVolumes = allocated.map(v => unit === 'ml' ? v : v / 1000);
+  const displayVolumes = allocated.map(v => unit === 'ml' ? v : v/1000);
   renderResult(items, displayVolumes, unit, finalVolumeRaw, totalRatio);
   saveState();
 }
@@ -293,39 +266,30 @@ function calculate(){
 function renderResult(items, displayVolumes, unit, finalVolumeRaw, totalRatio){
   const r = document.getElementById('result');
   r.innerHTML = '';
-  const list = document.createElement('div');
-  list.className = 'result-list';
+  const list = document.createElement('div'); list.className = 'result-list';
   items.forEach((it, idx) => {
     const v = displayVolumes[idx];
     const percent = (it.ratio / totalRatio) * 100;
-    const row = document.createElement('div');
-    row.style.display = 'flex'; row.style.justifyContent = 'space-between'; row.style.alignItems = 'center';
+    const row = document.createElement('div'); row.className = 'result-row';
     row.innerHTML = `<div><strong>${escapeHtml(it.name)}</strong> <span class="small">(${percent.toFixed(1)}%)</span></div>
                      <div class="small">${formatVolume(v, unit)}</div>`;
     list.appendChild(row);
   });
   r.appendChild(list);
 
-  const hr = document.createElement('hr'); hr.style.border = 'none'; hr.style.height='1px'; hr.style.margin='8px 0'; hr.style.background='rgba(255,255,255,0.03)';
+  const hr = document.createElement('hr'); hr.style.border='none'; hr.style.height='1px'; hr.style.margin='8px 0'; hr.style.background='rgba(255,255,255,0.03)';
   r.appendChild(hr);
-  const tot = document.createElement('div');
-  tot.style.display = 'flex'; tot.style.justifyContent='space-between'; tot.style.alignItems='center';
+  const tot = document.createElement('div'); tot.className = 'result-row';
   tot.innerHTML = `<div class="small"><strong>Total</strong></div><div><strong>${formatVolume(unit === 'ml' ? finalVolumeRaw : (finalVolumeRaw), unit)}</strong></div>`;
   r.appendChild(tot);
 
-  // build plain text summary for copy
-  const text = items.map((it, idx)=> `${it.name}: ${formatVolume(displayVolumes[idx], unit)} (${(it.ratio/totalRatio*100).toFixed(1)}%)`).join('\n');
-  r.dataset.text = text;
+  r.dataset.text = items.map((it, idx)=> `${it.name}: ${formatVolume(displayVolumes[idx], unit)} (${(it.ratio/totalRatio*100).toFixed(1)}%)`).join('\n');
 }
 
 function formatVolume(v, unit){
-  if(unit === 'ml'){
-    return `${Math.round(v)} ml`;
-  } else {
-    // show liters with up to 3 decimals, trim trailing zeros
-    const s = Number(v).toFixed(3).replace(/\.?0+$/, '');
-    return `${s} L`;
-  }
+  if(unit === 'ml'){ return `${Math.round(v)} ml`; }
+  const s = Number(v).toFixed(3).replace(/\.?0+$/, '');
+  return `${s} L`;
 }
 
 function renderMessage(msg){
@@ -341,25 +305,17 @@ function copyResult(){
   navigator.clipboard?.writeText(txt).then(()=>{ alert('Copied to clipboard'); }, ()=>{ alert('Copy failed'); });
 }
 
-/* UI helpers */
 function updateTotals(){
   const rows = [...document.querySelectorAll('.part')];
   const ratios = rows.map(r => parseFloat(r.querySelector('.ratio').value) || 0);
   const total = ratios.reduce((a,b)=>a+b,0);
   document.getElementById('totalRatio').textContent = total ? total : 0;
-  if(rows.length > 0 && total > 0){
-    const r0 = parseFloat(rows[0].querySelector('.ratio').value) || 0;
-    document.getElementById('previewPercent').textContent = ((r0/total)*100).toFixed(1) + '%';
-  } else {
-    document.getElementById('previewPercent').textContent = '—';
-  }
 }
 
 function escapeHtml(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
-/* init */
+/* Init */
 (function init(){
-  populatePresetList();
   if(!loadState()){
     addPart('Part A', 1);
     addPart('Part B', 1);
